@@ -15,7 +15,7 @@
     "browserify": "^13.1.1",
     "express": "^4.14.0",
     "gulp": "^3.9.1",
-    "react-multimedia-capture": "^1.0.1",
+    "react-multimedia-capture": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },

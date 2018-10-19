@@ -11,15 +11,20 @@ class VideoExample extends React.Component {
 			paused: false
 		};
 
+		this.handleRequest = this.handleRequest.bind(this);
 		this.handleGranted = this.handleGranted.bind(this);
 		this.handleDenied = this.handleDenied.bind(this);
 		this.handleStart = this.handleStart.bind(this);
 		this.handleStop = this.handleStop.bind(this);
 		this.handlePause = this.handlePause.bind(this);
 		this.handleResume = this.handleResume.bind(this);
+		this.handleStreamClose = this.handleStreamClose.bind(this);
 		this.setStreamToVideo = this.setStreamToVideo.bind(this);
 		this.releaseStreamFromVideo = this.releaseStreamFromVideo.bind(this);
 		this.downloadVideo = this.downloadVideo.bind(this);
+	}
+	handleRequest() {
+		console.log('Request Recording...');
 	}
 	handleGranted() {
 		this.setState({ granted: true });
@@ -64,6 +69,11 @@ class VideoExample extends React.Component {
 	handleError(err) {
 		console.log(err);
 	}
+	handleStreamClose() {
+		this.setState({
+			granted: false
+		});
+	}
 	setStreamToVideo(stream) {
 		let video = this.refs.app.querySelector('video');
 		
@@ -99,6 +109,7 @@ class VideoExample extends React.Component {
 				<MediaCapturer
 					constraints={{ audio: true, video: true }}
 					timeSlice={10}
+					onRequestPermission={this.handleRequest}
 					onGranted={this.handleGranted}
 					onDenied={this.handleDenied}
 					onStart={this.handleStart}
@@ -106,12 +117,15 @@ class VideoExample extends React.Component {
 					onPause={this.handlePause}
 					onResume={this.handleResume}
 					onError={this.handleError} 
-					render={({ start, stop, pause, resume }) => 
+					onStreamClosed={this.handleStreamClose}
+					render={({ request, start, stop, pause, resume }) => 
 					<div>
 						<p>Granted: {granted.toString()}</p>
 						<p>Rejected Reason: {rejectedReason}</p>
 						<p>Recording: {recording.toString()}</p>
 						<p>Paused: {paused.toString()}</p>
+
+						{!granted && <button onClick={request}>Get Permission</button>}
 						<button onClick={start}>Start</button>
 						<button onClick={stop}>Stop</button>
 						<button onClick={pause}>Pause</button>

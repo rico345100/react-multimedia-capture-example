@@ -17,6 +17,7 @@ class AudioExample extends React.Component {
 		this.handleStop = this.handleStop.bind(this);
 		this.handlePause = this.handlePause.bind(this);
 		this.handleResume = this.handleResume.bind(this);
+		this.handleStreamClose = this.handleStreamClose.bind(this);
 		this.downloadAudio = this.downloadAudio.bind(this);
 	}
 	handleGranted() {
@@ -52,6 +53,11 @@ class AudioExample extends React.Component {
 			paused: false
 		});
 	}
+	handleStreamClose() {
+		this.setState({
+			granted: false
+		});
+	}
 	handleError(err) {
 		console.log(err);
 	}
@@ -85,12 +91,15 @@ class AudioExample extends React.Component {
 					onPause={this.handlePause}
 					onResume={this.handleResume}
 					onError={this.handleError} 
-					render={({ start, stop, pause, resume }) => 
+					onStreamClosed={this.handleStreamClose}
+					render={({ request, start, stop, pause, resume }) => 
 					<div>
 						<p>Granted: {granted.toString()}</p>
 						<p>Rejected Reason: {rejectedReason}</p>
 						<p>Recording: {recording.toString()}</p>
 						<p>Paused: {paused.toString()}</p>
+
+						{!granted && <button onClick={request}>Get Permission</button>}
 						<button onClick={start}>Start</button>
 						<button onClick={stop}>Stop</button>
 						<button onClick={pause}>Pause</button>
